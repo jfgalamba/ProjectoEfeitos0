@@ -10,10 +10,11 @@ que prefxar o script com python ou python3):
     $ efeitos.py [-i INTERVALO] [-d DIM] palavra1 [palavra2] ... [palavraN]
 
 Depois aplica cada um dos efeitos em baixo descritos ao texto que 
-resulta da concatenação de palavra1, palavra2, etc. Consoante a sua
-plataforma, poderá ter que invocar directamente o interpretador Os
-caracteres do texto (que resultam da concatenação de todas as palavras)
-devem ser exibidos individualmente.
+resulta da concatenação de palavra1, palavra2, etc. No enunciado
+encontra o significado das opções '-i' e '-d'.
+
+Os caracteres do texto (que resultam da concatenação de todas as 
+palavras) devem ser exibidos individualmente.
 
 A opção -i permite indicar intervalo de tempo entre exibições, ao passo que 
 a opção -d indica a dimensão da linha onde apropriado.

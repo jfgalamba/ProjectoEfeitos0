@@ -41,6 +41,7 @@ Código sob licença MIT. Consultar: https://mit-license.org/
 def main():
     print("Hello, World!")
     print("Goodbye, World!")
+    print("FIM!")
 #:
 
 if __name__ == '__main__':

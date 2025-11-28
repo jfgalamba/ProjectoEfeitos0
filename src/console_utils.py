@@ -1,3 +1,13 @@
+"""
+Utilitários (essencialmente funções) para usar na em programas que
+correm no terminal.
+
+--------------------------------------------------------------------------------
+
+(C) João Galamba, 2025
+Código sob licença MIT. Consultar: https://mit-license.org/
+"""
+
 import sys
 import os
 import subprocess as subproc
@@ -5,7 +15,8 @@ from collections.abc import Mapping
 import os
 from typing import Iterable, Any
 
-all = [
+
+__all__ = (
     'accept',
     'show_msg',
     'confirm',
@@ -16,7 +27,7 @@ all = [
     'pause',
     'clear_screen',
     'supports_ansi_terminal',
-]
+)
 
 
 DEFAULT_INDENTATION = 0
@@ -281,7 +292,7 @@ def pause(msg: str="Pressione ENTER para continuar...", indent = DEFAULT_INDENTA
         show_msg(msg, indent = indent)
     match os.name:
         case 'nt':      # Windows (excepto Win9X)
-            os.system("pause>null|set/p=")
+            os.system("pause>nul|set/p=")
         case 'posix':   # Unixes e compatíveis
             if os.path.exists('/bin/bash'):
                 os.system('/bin/bash -c "read -s -n 1"')

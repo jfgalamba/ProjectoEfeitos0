@@ -1,4 +1,4 @@
-#!/usr/env python
+#!/usr/bin/env python3
 """
 Nesta parte deve desenvolver um programa em Python para exibir o texto
 introduzido na linha de comandos de acordo com determinados "efeitos
@@ -33,16 +33,19 @@ Para já, os efeitos a desenvolver são:
 O programa exibe um menu com opções para ver cada um dos efeitos de
 forma individual, e todos em conjunto.
 
------------------------------
+--------------------------------------------------------------------------------
 
 (C) João Galamba, 2025
 Código sob licença MIT. Consultar: https://mit-license.org/
 """
 
+from console_utils import clear_screen, pause
+
+
 def main():
+    clear_screen()
     print("Hello, World!")
-    print("Goodbye, World!")
-    print("FIM!")
+    pause()
 #:
 
 if __name__ == '__main__':

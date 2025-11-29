@@ -19,6 +19,7 @@ from typing import Iterable, Any
 __all__ = (
     'accept',
     'show_msg',
+    'show_msgs',
     'confirm',
     'ask',
     'show_msg',
@@ -30,7 +31,7 @@ __all__ = (
 )
 
 
-DEFAULT_INDENTATION = 0
+DEFAULT_INDENTATION = 3
 DEFAULT_LANGUAGE = 'en'
 
 

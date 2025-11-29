@@ -39,13 +39,181 @@ forma individual, e todos em conjunto.
 Código sob licença MIT. Consultar: https://mit-license.org/
 """
 
-from console_utils import clear_screen, pause
+import sys
+import time
+import random
+from typing import Callable, Iterable
+
+from console_utils import clear_screen, pause, show_msg, show_msgs, ask
+from utils import renumerate
+
+
+DEFAULT_LINE_LEN = 40
+DEFAULT_DELAY = 0.1
 
 
 def main():
-    clear_screen()
-    print("Hello, World!")
-    pause()
+    txt = 'FRASCO AZUL'
+    menu = """
+****************************************************
+*                                                  *
+*  EFEITO                                          *
+*                                                  *
+*    1 - Diagonal Esquerda                         *
+*    2 - Diagonal Direita, Texto Invertido         *
+*    3 - Diagonais Cruzadas                        *
+*    4 - Em V                                      *
+*    5 - Escada, Palavras Ordem Inversa            *
+*    6 - Deslizante                                *
+*    7 - Destapa Posições Aleatórias               *
+*    8 - Destapa Matriz                            *
+*    T - Todos                                     *
+*    E - Encerrar                                  *
+*                                                  *
+****************************************************
+"""
+    while True:
+        clear_screen()
+        show_msgs(menu.split('\n'))
+        print()
+        try:
+            opcao = ask("  OPÇÃO> ")
+        except KeyboardInterrupt:
+            break
+        print()
+
+        clear_screen()
+        match opcao.upper():
+            case '1':
+                left_to_right_diagonal_effect(txt)
+            case '2':
+                right_to_left_diagonal_effect(txt)
+            case '3':
+                x_effect(txt)
+            case '4':
+                v_effect(txt)
+            case '5':
+                stair_effect(txt)
+            case '6':
+                slidding_effect(txt)
+            case '7':
+                uncover_line_effect(txt, speedup = 0.5)
+            case '8':
+                uncover_matrix_effect(txt, speedup = 2.0)
+            case 'T' | 'TODOS':
+                all_effects(
+                    txt,
+                    (
+                        left_to_right_diagonal_effect,
+                        right_to_left_diagonal_effect,
+                        x_effect,
+                        v_effect,
+                        stair_effect,
+                        slidding_effect,
+                        lambda txt: uncover_line_effect(txt, speedup = 0.5),
+                        lambda txt: uncover_matrix_effect(txt, speedup = 2.0)
+                    ),
+                )
+                continue
+            case 'E' | 'ENCERRAR':
+                break
+            case _:
+                print(f"Opção <{opcao}> inválida")
+
+        pause()
+    #: Main loop => the program should terminate when this loop ends
+    show_msg("  O programa vai encerrar!\n")
+#:
+
+def left_to_right_diagonal_effect(txt: str):
+    for i, ch in enumerate(txt):
+        show_msg(f"{' ' * i}{ch}")
+#:
+
+def right_to_left_diagonal_effect(txt: str):
+    for i, ch in renumerate(txt):
+        show_msg(f"{' ' * i}{ch}")
+#:
+
+def x_effect(txt: str):
+    for l, ch in enumerate(txt):
+        for c in range(len(txt)):
+            if l == c or l + c == len(txt) - 1:
+                show_msg(ch, end = '')
+            else:
+                show_msg(' ', end = '')
+        print()
+#:
+
+def v_effect(txt: str):
+    isc = len(txt) * 2 - 2      # inside_spaces_count
+    osc = 0                     # outside_spaces_count
+    for ch1, ch2 in zip(txt, reversed(txt)):
+        show_msg(f"{' ' * osc}{ch1}{' ' * isc}{ch2}{' ' * osc}")
+        isc -= 2
+        osc += 1
+#:
+
+def stair_effect(txt: str):
+    words = reversed(txt.split())
+    for i, word in enumerate(words):
+        show_msg(f"{' ' * i}{word}")
+#:
+
+def slidding_effect(txt: str, line_len = DEFAULT_LINE_LEN, delay = DEFAULT_DELAY):
+    try:
+        i = 0
+        while True:
+            line = ['.'] * line_len
+            for j, ch in enumerate(txt):
+                line[(i + j) % line_len] = ch
+            show_msg(f"{''.join(line)}", end = '\r')
+            i += 1
+            time.sleep(delay)
+    except KeyboardInterrupt:
+        show_msg(f"{''.join(line)}")  # type: ignore
+#:
+
+def uncover_line_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):
+    delay /= speedup
+    random_positions = list(range(len(txt)))
+    random.shuffle(random_positions)
+    line = ['.'] * len(txt)
+    for pos in random_positions:
+        line[pos] = txt[pos]
+        show_msg(''.join(line), end = '\r')
+        time.sleep(delay)
+    print()
+#:
+
+def uncover_matrix_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):
+    delay /= speedup
+    random_positions = list(range(len(txt) ** 2))
+    random.shuffle(random_positions)
+    matrix = [['.' for _ in range(len(txt))] for _ in range(len(txt))]
+
+    for pos in random_positions:
+        clear_screen()
+        l = pos // len(txt)
+        c = pos % len(txt)
+        matrix[l][c] = txt[c]
+        # print('\n'.join(''.join(line) for line in matrix))
+        show_msgs(''.join(line) for line in matrix)
+        time.sleep(delay)
+#:
+
+def all_effects(
+        txt: str, 
+        effects: Iterable[Callable],
+        clear_screen_ = True,
+        pause_ = True,
+):
+    clear_screen_fn = (lambda: None, clear_screen)[clear_screen_]
+    pause_fn        = (lambda: None, pause)[pause_]
+    for effect in effects:
+        clear_screen_fn()
+        effect(txt)
+        pause_fn()
 #:
 
 if __name__ == '__main__':

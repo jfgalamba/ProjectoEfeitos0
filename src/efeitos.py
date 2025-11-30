@@ -82,7 +82,7 @@ def main():
             case '8':
                 show_uncover_matrix_effect(txt, speedup = 2.0)
             case 'T' | 'TODOS':
-                all_effects(
+                show_all_effects(
                     txt,
                     (
                         show_left_to_right_diagonal_effect,
@@ -141,7 +141,7 @@ def show_right_to_left_diagonal_effect(txt: str):
 
 def show_x_effect(txt: str):
     for l, ch in enumerate(txt):
-        show_msg(end='')   # indent the line like in all other show_msgs
+        show_msg(end = '')   # indent the line like in all other show_msgs
         for c in range(len(txt)):
             if l == c or l + c == len(txt) - 1:
                 show_msg(ch, indent = 0, end = '')
@@ -207,7 +207,7 @@ def show_uncover_matrix_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):
         time.sleep(delay)
 #:
 
-def all_effects(
+def show_all_effects(
         txt: str, 
         effects: Iterable[Callable],
         clear_screen_ = True,

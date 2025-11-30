@@ -57,8 +57,10 @@ def renumerate(
     collection.
 
     Args:
-        collection: Sized reversible collection (list, tuple, str,
-                    deque, etc.)
+        collection: Sized reversible collection or iterable (list, 
+            tuple, str, deque, etc.). Collections/iterables that 
+            renumerate won't accept: set, any generator, generator
+            expressions, etc.
         start_at: Starting index (None = len(collection)-1)
 
     Returns:

@@ -12,8 +12,8 @@ import sys
 import os
 import subprocess as subproc
 from collections.abc import Mapping
-import os
 from typing import Iterable, Any
+from contextlib import contextmanager
 
 
 __all__ = (
@@ -28,11 +28,13 @@ __all__ = (
     'pause',
     'clear_screen',
     'supports_ansi_terminal',
+    'set_global_indentation',
+    'temp_indentation',
 )
 
 
-DEFAULT_INDENTATION = 3
-DEFAULT_LANGUAGE = 'en'
+_indentation = 3
+_language = 'en'
 
 
 def accept(
@@ -40,7 +42,7 @@ def accept(
         error_msg: str, 
         check_fn = lambda _: True,
         convert_fn = lambda x: x, 
-        indent = DEFAULT_INDENTATION
+        indent = _indentation
 ) -> Any:
     """
     Accepts a value read from the standard input, optionally 
@@ -115,8 +117,8 @@ def accept(
 def confirm(
         msg: str, 
         default = '',
-        indent = DEFAULT_INDENTATION, 
-        language = DEFAULT_LANGUAGE,
+        indent = _indentation, 
+        language = _language,
 ) -> bool:
     """
     >>> confirm("Do you like peanuts? ")
@@ -199,16 +201,16 @@ def confirm(
             show_msg(local_text['invalid_answer'], indent=indent)
 #:
 
-def ask(msg: str, indent = DEFAULT_INDENTATION) -> str:
+def ask(msg: str, indent = _indentation) -> str:
     return input(f"{indent * ' '}{msg}")
 #:
 
-def show_msg(*args, indent = DEFAULT_INDENTATION, **kargs):
+def show_msg(*args, indent = _indentation, **kargs):
     print_args = [' ' * (indent - 1), *args] if indent > 0 else [*args]
     print(*print_args, **kargs)
 #:
 
-def show_msgs(msgs: Iterable[str], *args, indent = DEFAULT_INDENTATION, **kargs):
+def show_msgs(msgs: Iterable[str], *args, indent = _indentation, **kargs):
     for msg in msgs:
         show_msg(msg, *args, indent = indent, **kargs)
 #:
@@ -288,7 +290,7 @@ def show_table(
         show_msg(table_section, *show_args, **show_kargs)
 #:
 
-def pause(msg: str="Pressione ENTER para continuar...", indent = DEFAULT_INDENTATION):
+def pause(msg: str="Pressione ENTER para continuar...", indent = _indentation):
     if msg:
         show_msg(msg, indent = indent)
     match os.name:
@@ -381,3 +383,20 @@ def supports_ansi_terminal() -> bool:
 #         subprocess.run(['cls'], shell = True)
 # #:
 
+
+def set_global_indentation(new_identation: int):
+    global _indentation
+    if new_identation < 0:
+        raise ValueError(f'Negative indentation: {new_identation}')
+    _indentation = new_identation
+#:
+
+@contextmanager
+def temp_indentation(new_identation: int):
+    old_indentation = _indentation
+    try:
+        set_global_indentation(new_identation)
+        yield
+    finally:
+        set_global_indentation(old_indentation)
+#:

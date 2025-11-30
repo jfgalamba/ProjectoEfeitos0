@@ -54,6 +54,59 @@ DEFAULT_DELAY = 0.1
 
 def main():
     txt = 'FRASCO AZUL'
+    while True:
+        clear_screen()
+        show_menu_options()
+        try:
+            opcao = ask("  OPÇÃO> ")
+        except KeyboardInterrupt:
+            break
+        print()
+
+        clear_screen()
+        match opcao.upper():
+            case '1':
+                show_left_to_right_diagonal_effect(txt)
+            case '2':
+                show_right_to_left_diagonal_effect(txt)
+            case '3':
+                show_x_effect(txt)
+            case '4':
+                show_v_effect(txt)
+            case '5':
+                show_stair_effect(txt)
+            case '6':
+                show_slidding_effect(txt)
+            case '7':
+                show_uncover_line_effect(txt, speedup = 0.5)
+            case '8':
+                show_uncover_matrix_effect(txt, speedup = 2.0)
+            case 'T' | 'TODOS':
+                all_effects(
+                    txt,
+                    (
+                        show_left_to_right_diagonal_effect,
+                        show_right_to_left_diagonal_effect,
+                        show_x_effect,
+                        show_v_effect,
+                        show_stair_effect,
+                        show_slidding_effect,
+                        lambda txt: show_uncover_line_effect(txt, speedup = 0.5),
+                        lambda txt: show_uncover_matrix_effect(txt, speedup = 2.0)
+                    ),
+                )
+                continue
+            case 'E' | 'ENCERRAR':
+                break
+            case _:
+                print(f"Opção <{opcao}> inválida")
+
+        pause()
+    #: while => main loop: the program should terminate when this loop ends
+    show_msg("  O programa vai encerrar!\n")
+#:
+
+def show_menu_options():
     menu = """
 ****************************************************
 *                                                  *
@@ -72,80 +125,32 @@ def main():
 *                                                  *
 ****************************************************
 """
-    while True:
-        clear_screen()
-        show_msgs(menu.split('\n'))
-        print()
-        try:
-            opcao = ask("  OPÇÃO> ")
-        except KeyboardInterrupt:
-            break
-        print()
-
-        clear_screen()
-        match opcao.upper():
-            case '1':
-                left_to_right_diagonal_effect(txt)
-            case '2':
-                right_to_left_diagonal_effect(txt)
-            case '3':
-                x_effect(txt)
-            case '4':
-                v_effect(txt)
-            case '5':
-                stair_effect(txt)
-            case '6':
-                slidding_effect(txt)
-            case '7':
-                uncover_line_effect(txt, speedup = 0.5)
-            case '8':
-                uncover_matrix_effect(txt, speedup = 2.0)
-            case 'T' | 'TODOS':
-                all_effects(
-                    txt,
-                    (
-                        left_to_right_diagonal_effect,
-                        right_to_left_diagonal_effect,
-                        x_effect,
-                        v_effect,
-                        stair_effect,
-                        slidding_effect,
-                        lambda txt: uncover_line_effect(txt, speedup = 0.5),
-                        lambda txt: uncover_matrix_effect(txt, speedup = 2.0)
-                    ),
-                )
-                continue
-            case 'E' | 'ENCERRAR':
-                break
-            case _:
-                print(f"Opção <{opcao}> inválida")
-
-        pause()
-    #: Main loop => the program should terminate when this loop ends
-    show_msg("  O programa vai encerrar!\n")
+    show_msgs(menu.split('\n'))
+    print()
 #:
 
-def left_to_right_diagonal_effect(txt: str):
+def show_left_to_right_diagonal_effect(txt: str):
     for i, ch in enumerate(txt):
         show_msg(f"{' ' * i}{ch}")
 #:
 
-def right_to_left_diagonal_effect(txt: str):
+def show_right_to_left_diagonal_effect(txt: str):
     for i, ch in renumerate(txt):
         show_msg(f"{' ' * i}{ch}")
 #:
 
-def x_effect(txt: str):
+def show_x_effect(txt: str):
     for l, ch in enumerate(txt):
+        show_msg(end='')   # indent the line like in all other show_msgs
         for c in range(len(txt)):
             if l == c or l + c == len(txt) - 1:
-                show_msg(ch, end = '')
+                show_msg(ch, indent = 0, end = '')
             else:
-                show_msg(' ', end = '')
+                show_msg(' ', indent = 0, end = '')
         print()
 #:
 
-def v_effect(txt: str):
+def show_v_effect(txt: str):
     isc = len(txt) * 2 - 2      # inside_spaces_count
     osc = 0                     # outside_spaces_count
     for ch1, ch2 in zip(txt, reversed(txt)):
@@ -154,13 +159,13 @@ def v_effect(txt: str):
         osc += 1
 #:
 
-def stair_effect(txt: str):
+def show_stair_effect(txt: str):
     words = reversed(txt.split())
     for i, word in enumerate(words):
         show_msg(f"{' ' * i}{word}")
 #:
 
-def slidding_effect(txt: str, line_len = DEFAULT_LINE_LEN, delay = DEFAULT_DELAY):
+def show_slidding_effect(txt: str, line_len = DEFAULT_LINE_LEN, delay = DEFAULT_DELAY):
     try:
         i = 0
         while True:
@@ -174,7 +179,7 @@ def slidding_effect(txt: str, line_len = DEFAULT_LINE_LEN, delay = DEFAULT_DELAY
         show_msg(f"{''.join(line)}")  # type: ignore
 #:
 
-def uncover_line_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):
+def show_uncover_line_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):
     delay /= speedup
     random_positions = list(range(len(txt)))
     random.shuffle(random_positions)
@@ -186,7 +191,7 @@ def uncover_line_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):
     print()
 #:
 
-def uncover_matrix_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):
+def show_uncover_matrix_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):
     delay /= speedup
     random_positions = list(range(len(txt) ** 2))
     random.shuffle(random_positions)

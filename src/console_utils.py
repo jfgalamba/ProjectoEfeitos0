@@ -42,7 +42,7 @@ def accept(
         error_msg: str, 
         check_fn = lambda _: True,
         convert_fn = lambda x: x, 
-        indent = _indentation
+        indent: int | None = None,
 ) -> Any:
     """
     Accepts a value read from the standard input, optionally 
@@ -100,6 +100,7 @@ def accept(
             check_fn = lambda txt: len(txt.strip()) >= 2,
         )
     """
+    indent = indent or _indentation
     while True:
         value_str = ask(msg, indent = indent)
         if check_fn(value_str):
@@ -117,7 +118,7 @@ def accept(
 def confirm(
         msg: str, 
         default = '',
-        indent = _indentation, 
+        indent: int | None = None,
         language = _language,
 ) -> bool:
     """
@@ -143,7 +144,7 @@ def confirm(
     ...
     ValueError: Invalid default value: BATATAS
     """
-
+    indent = indent or _indentation
     localized_text = {
         'en': {
             'default_text_dict': {
@@ -201,16 +202,18 @@ def confirm(
             show_msg(local_text['invalid_answer'], indent=indent)
 #:
 
-def ask(msg: str, indent = _indentation) -> str:
+def ask(msg: str, indent: int | None = None) -> str:
+    indent = indent or _indentation
     return input(f"{indent * ' '}{msg}")
 #:
 
-def show_msg(*args, indent = _indentation, **kargs):
+def show_msg(*args, indent: int | None = None, **kargs):
+    indent = indent or _indentation
     print_args = [' ' * (indent - 1), *args] if indent > 0 else [*args]
     print(*print_args, **kargs)
 #:
 
-def show_msgs(msgs: Iterable[str], *args, indent = _indentation, **kargs):
+def show_msgs(msgs: Iterable[str], *args, indent: int | None = None, **kargs):
     for msg in msgs:
         show_msg(msg, *args, indent = indent, **kargs)
 #:
@@ -290,7 +293,7 @@ def show_table(
         show_msg(table_section, *show_args, **show_kargs)
 #:
 
-def pause(msg: str="Pressione ENTER para continuar...", indent = _indentation):
+def pause(msg: str="Pressione ENTER para continuar...", indent: int | None = None):
     if msg:
         show_msg(msg, indent = indent)
     match os.name:

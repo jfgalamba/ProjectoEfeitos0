@@ -48,8 +48,8 @@ from console_utils import clear_screen, pause, show_msg, show_msgs, ask
 from utils import renumerate
 
 
-DEFAULT_LINE_LEN = 40
-DEFAULT_DELAY = 0.1
+DEFAULT_LINE_LEN = 40     # em caracteres
+DEFAULT_DELAY = 0.1       # em segundos (neste caso temos 0.1s)
 
 
 def main():

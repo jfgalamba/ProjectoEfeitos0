@@ -280,7 +280,7 @@ def show_table(
             convert_fn = col_def.get('convert_fn', lambda x: x)
             val = convert_fn(val)
             if 'decimal_places' in col_def:
-                decimal_places_fmt = f'{{:.{col_def['decimal_places']}f}}' 
+                decimal_places_fmt = f"{{:.{col_def['decimal_places']}f}}"
                 val = decimal_places_fmt.format(val)
             unit = col_def.get('unit', '')
             args.append(f'{val}{unit}')

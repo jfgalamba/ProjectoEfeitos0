@@ -173,10 +173,10 @@ def show_slidding_effect(txt: str, line_len = DEFAULT_LINE_LEN, delay = DEFAULT_
             for j, ch in enumerate(txt):
                 line[(i + j) % line_len] = ch
             show_msg(f"{''.join(line)}", end = '\r')
-            i += 1
             time.sleep(delay)
+            i += 1
     except KeyboardInterrupt:
-        show_msg(f"{''.join(line)}")  # type: ignore
+        show_msg(''.join(line))  # type: ignore
 #:
 
 def show_uncover_line_effect(txt: str, delay = DEFAULT_DELAY, speedup = 1.0):

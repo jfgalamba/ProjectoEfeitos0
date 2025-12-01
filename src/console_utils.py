@@ -100,7 +100,7 @@ def accept(
             check_fn = lambda txt: len(txt.strip()) >= 2,
         )
     """
-    indent = indent or _indentation
+    indent = _indentation if indent is None else indent
     while True:
         value_str = ask(msg, indent = indent)
         if check_fn(value_str):
@@ -144,7 +144,8 @@ def confirm(
     ...
     ValueError: Invalid default value: BATATAS
     """
-    indent = indent or _indentation
+
+    indent = _indentation if indent is None else indent
     localized_text = {
         'en': {
             'default_text_dict': {
@@ -203,12 +204,12 @@ def confirm(
 #:
 
 def ask(msg: str, indent: int | None = None) -> str:
-    indent = indent or _indentation
+    indent = _indentation if indent is None else indent
     return input(f"{indent * ' '}{msg}")
 #:
 
 def show_msg(*args, indent: int | None = None, **kargs):
-    indent = indent or _indentation
+    indent = _indentation if indent is None else indent
     print_args = [' ' * (indent - 1), *args] if indent > 0 else [*args]
     print(*print_args, **kargs)
 #:

@@ -42,6 +42,7 @@ Código sob licença MIT. Consultar: https://mit-license.org/
 import sys
 import time
 import random
+import argparse
 from typing import Callable, Iterable
 
 from console_utils import clear_screen, pause, show_msg, show_msgs, ask
@@ -53,7 +54,35 @@ DEFAULT_DELAY = 0.1       # em segundos (neste caso temos 0.1s)
 
 
 def main():
-    txt = 'FRASCO AZUL'
+    # 
+    parser = argparse.ArgumentParser(
+        description = 'Aplica efeitos especiais a texto introduzido na linha de comandos',
+        # color = True / False,   em Python 3.14
+    )
+    parser.add_argument(
+        '-i',  '--delay', '--intervalo',
+        help = 'Intervalo de tempo entre exibições, útil para efeitos com movimento',
+        type = float,
+        default = DEFAULT_DELAY,
+        metavar = 'INTERVALO',
+    )
+    parser.add_argument(
+        '-d', '--line-len', '--dimensao-linha',
+        help = 'Dimensão da linha em caracteres para efeito deslizante',
+        type = int,
+        default = DEFAULT_LINE_LEN,
+        metavar = 'DIMENSAO_LINHA',
+    )
+    parser.add_argument(
+        'text',
+        help = 'Palavras a listar',
+        metavar = 'PALAVRA',
+        nargs = '+',
+    )
+    args = parser.parse_args()
+
+    txt = ' '.join(args.text)
+
     while True:
         clear_screen()
         show_menu_options()
@@ -76,11 +105,11 @@ def main():
             case '5':
                 show_stair_effect(txt)
             case '6':
-                show_slidding_effect(txt)
+                show_slidding_effect(txt, delay = args.delay, line_len = args.line_len)
             case '7':
-                show_uncover_line_effect(txt, speedup = 0.5)
+                show_uncover_line_effect(txt, delay = args.delay, speedup = 0.5)
             case '8':
-                show_uncover_matrix_effect(txt, speedup = 2.0)
+                show_uncover_matrix_effect(txt, delay = args.delay, speedup = 2.0)
             case 'T' | 'TODOS':
                 show_all_effects(
                     txt,
@@ -91,8 +120,8 @@ def main():
                         show_v_effect,
                         show_stair_effect,
                         show_slidding_effect,
-                        lambda txt: show_uncover_line_effect(txt, speedup = 0.5),
-                        lambda txt: show_uncover_matrix_effect(txt, speedup = 2.0)
+                        lambda txt: show_uncover_line_effect(txt, delay = args.delay, speedup = 0.5),
+                        lambda txt: show_uncover_matrix_effect(txt, delay = args.delay, speedup = 2.0)
                     ),
                 )
                 continue

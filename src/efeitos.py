@@ -33,6 +33,15 @@ Para já, os efeitos a desenvolver são:
 O programa exibe um menu com opções para ver cada um dos efeitos de
 forma individual, e todos em conjunto.
 
+EXEMPLOS:
+    $ efeitos.py -i 0.25 -d 37 FRASCO
+    $ efeitos.py -i 0.25 -d 37 FRASCO AZUL
+    $ efeitos.py -i 0.25 -d 37    # ERRO: Falta 1 palavra
+    $ efeitos.py --intervalo=0.25 --dimensao-linha=40  FRASCO
+    $ efeitos.py --delay=0.25 --line-len=40 TEXTO
+    $ efeitos.py --delay=0.25 -d 40 TEXTO
+    $ efeitos.py -d 40 --delay=0.25 TEXTO
+
 --------------------------------------------------------------------------------
 
 (C) João Galamba, 2025
